@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--suppress HtmlUnknownTarget -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de_DE" lang="de_DE">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="Content-Style-Type" content="text/css"/>
+  <meta http-equiv="Content-Script-Type" content="text/javascript"/>
+  <meta name="viewport"
+        content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+
+  <link rel="stylesheet" type="text/css" href="basic.css"/>
+  <!-- web socket script -->
+  <script type="text/javascript" src="../web-sockets2.js"></script>
+  <title>Test</title>
+</head>
+<body>
+
+Status: <label id="status">None</label>
+<canvas id="canvas" width="480" height="640"></canvas>
+    <div id="ns-avgl-facetgraph" class="noselect nodrag">
+      <div id="ns-avgl-facetgraph-overlay"></div>
+      <div id="ns-avgl-facetgraph-infovis"></div>
+    </div>
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="polyfill.js"></script>
+<script type="text/javascript" src="jit.custom.js"></script>
+<script type="text/javascript" src="avgl.js"></script>
+<script type="text/javascript" src="graph.js"></script>
+<script type="text/javascript">
+  jQuery(document).ready(function() {
+    avgl._resultContainer = "#sideResultContainer";
+    jQuery("#resultTabs").find(".facetSearch").removeClass("EXLSearchTabSelected");
+    jQuery("#ns-avgl-facettree").hide();
+    jQuery(".graphicSearch").addClass("EXLSearchTabSelected");
+    jQuery("#ns-avgl-facetgraph,#ns-avgl-facetgraph-breadcrumb,#ns-avgl-graph-zoom").show();
+    avgl.load.graph();
+  });
+</script>
+</body>
+</html>

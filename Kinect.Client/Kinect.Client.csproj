@@ -51,7 +51,17 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web-sockets2.js" />
     <Content Include="index.html" />
+    <Content Include="slubsemantics\avgl.js" />
+    <Content Include="slubsemantics\basic.css" />
+    <Content Include="slubsemantics\graph.js" />
+    <Content Include="slubsemantics\graph_data-org.js" />
+    <Content Include="slubsemantics\graph_data.js" />
+    <Content Include="slubsemantics\index.html" />
+    <Content Include="slubsemantics\jit.custom.js" />
+    <Content Include="slubsemantics\jquery.js" />
+    <Content Include="slubsemantics\polyfill.js" />
     <Content Include="style.css" />
     <Content Include="web-sockets.js" />
     <Content Include="Web.config" />
