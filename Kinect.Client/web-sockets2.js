@@ -51,25 +51,49 @@
         joint name = ankleright
         joint name = footright
         */
-        var canvas = document.getElementById("canvas");
+		
+		// save all joints in a dictionary (associative array) with key = name; value = actual joint object
+		var allJoints = new Array();
+		
+		// assume 1 skeleton
+		if(jsonObject.skeletons.length == 1)
+		{
+			for (var j = 0; j < jsonObject.skeletons[0].joints.length; j++) 
+			{
+                var joint = jsonObject.skeletons[0].joints[j];			
+				allJoints[joint.name] = joint;
+            }
+		}
+		
+		// PROBLEM 1: get the right canvas element / graph element
+		// PROBLEM 2: interact with graph element depending on kinect sensor data
+			// PROBLEM 2.1: how to trigger selection event on graph node
+		
+		// TRY: get the same canvas jit is drawing into?
+        //var canvas = document.getElementById("ns-avgl-facetgraph-infovis-canvas");
+		// ORIGINAL:
+		var canvas = document.getElementById("canvas");
         var ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+		
+		// TRY: get overlay to draw on top of jit canvas? - note: facetgraph overlay is a div; 
+		// is it possible to have two canvas elements on top of each other
+		// and both drawings are visible (i.e. canvas itself is transparent)?
+		var overlay = document.getElementById("ns-avgl-facetgraph-overlay");
 
-        for (var i = 0; i < jsonObject.skeletons.length; i++) {
-            for (var j = 0; j < jsonObject.skeletons[i].joints.length; j++) {
-
-                var joint = jsonObject.skeletons[i].joints[j];
-                if (joint.name == "handright") {
-                    ctx.save();
-                    ctx.scale(0.75, 1);
-                    ctx.beginPath();
-                    ctx.arc(parseFloat(joint.x), parseFloat(joint.y), 10, 0, Math.PI * 2, false);
-                    ctx.stroke();
-                    ctx.closePath();
-                    ctx.restore();
-                }
-            }
-        }
+		// instead of drawing kinect joints as below...
+        var rightHandJoint = allJoints["handright"];
+			// draw ellipsis at right hand position        
+			ctx.save();
+			ctx.scale(0.75, 1);
+			ctx.beginPath();
+			ctx.arc(parseFloat(rightHandJoint.x), parseFloat(rightHandJoint.y), 10, 0, Math.PI * 2, false);
+			ctx.stroke();
+			ctx.closePath();
+			ctx.restore();
+		
+		// ... select nodes in the graph depending on joint data
+		// for example: if right hand is extended more than 30cm from hip, change selection
 
 
 

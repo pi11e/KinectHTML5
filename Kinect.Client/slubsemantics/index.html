@@ -17,12 +17,17 @@
 </head>
 <body>
 
-Status: <label id="status">None</label>
-<canvas id="canvas" width="480" height="640"></canvas>
-    <div id="ns-avgl-facetgraph" class="noselect nodrag">
-      <div id="ns-avgl-facetgraph-overlay"></div>
-      <div id="ns-avgl-facetgraph-infovis"></div>
-    </div>
+
+<div id="kinect-status" align="center">
+	Status: <label id="status">None</label>
+	<canvas id="canvas" width="640" height="480"></canvas>
+</div>
+    
+<div id="ns-avgl-facetgraph" class="noselect nodrag">
+    <div id="ns-avgl-facetgraph-overlay"></div>
+    <div id="ns-avgl-facetgraph-infovis"></div>
+</div>
+	
 
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="polyfill.js"></script>
@@ -31,12 +36,14 @@ Status: <label id="status">None</label>
 <script type="text/javascript" src="graph.js"></script>
 <script type="text/javascript">
   jQuery(document).ready(function() {
-    avgl._resultContainer = "#sideResultContainer";
-    jQuery("#resultTabs").find(".facetSearch").removeClass("EXLSearchTabSelected");
-    jQuery("#ns-avgl-facettree").hide();
-    jQuery(".graphicSearch").addClass("EXLSearchTabSelected");
+    
+	//avgl._resultContainer = "#sideResultContainer";
+    //jQuery("#resultTabs").find(".facetSearch").removeClass("EXLSearchTabSelected");
+    //jQuery("#ns-avgl-facettree").hide();
+    //jQuery(".graphicSearch").addClass("EXLSearchTabSelected");
     jQuery("#ns-avgl-facetgraph,#ns-avgl-facetgraph-breadcrumb,#ns-avgl-graph-zoom").show();
     avgl.load.graph();
+	
   });
 </script>
 </body>
