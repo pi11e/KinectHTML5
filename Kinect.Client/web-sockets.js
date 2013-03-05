@@ -3,6 +3,9 @@
     var canvas = document.getElementById("canvas");
     var context = canvas.getContext("2d");
 
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+
     if (!window.WebSocket) {
         status.innerHTML = "Your browser does not support web sockets!";
         return;

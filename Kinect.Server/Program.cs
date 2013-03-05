@@ -37,7 +37,8 @@ namespace Kinect.Server
                 };
                 socket.OnClose = () =>
                 {
-                    Console.WriteLine("Disconnected from " + socket.ConnectionInfo.ClientIpAddress);
+                    if(socket.ConnectionInfo != null)
+                        Console.WriteLine("Disconnected from " + socket.ConnectionInfo.ClientIpAddress);
                     _sockets.Remove(socket);
                 };
                 socket.OnMessage = message =>

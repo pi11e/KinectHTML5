@@ -14,13 +14,16 @@
   <!-- web socket script -->
   <script type="text/javascript" src="../web-sockets2.js"></script>
   <title>Test</title>
+
+  <!-- draw canvas borders -->
+  <style type="text/css">canvas { border: 1px solid black; }</style>
 </head>
 <body>
 
 
-<div id="kinect-status" align="center">
+<div id="kinect-status">
 	Status: <label id="status">None</label>
-	<canvas id="canvas" width="640" height="480"></canvas>
+	<canvas id="canvas"></canvas>
 </div>
     
 <div id="ns-avgl-facetgraph" class="noselect nodrag">
