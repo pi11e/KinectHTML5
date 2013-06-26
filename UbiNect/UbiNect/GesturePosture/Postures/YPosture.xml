@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<posture>
+  <name>YPosture</name>
+  <type>posture</type>
+  <constraints>
+    <angle>
+      <jointLegOne>HandRight</jointLegOne>
+      <jointBase>ShoulderCenter</jointBase>
+      <jointLegTwo>HipCenter</jointLegTwo>
+      <minAngle>140</minAngle>
+      <maxAngle>160</maxAngle>
+    </angle>
+    <angle>
+      <jointLegOne>HandLeft</jointLegOne>
+      <jointBase>ShoulderCenter</jointBase>
+      <jointLegTwo>HipCenter</jointLegTwo>
+      <minAngle>140</minAngle>
+      <maxAngle>160</maxAngle>
+    </angle>
+  </constraints>
+</posture>

@@ -5,22 +5,82 @@ using System.Text;
 using Fleck;
 using Microsoft.Kinect;
 
+using UbiNect;
+using UbiNect.GesturePosture;
+using UbiNect.Move;
+
 namespace Kinect.Server
 {
-    class Program
+    // <ubi>
+    // Event hook that handles the dispatching of the MoveRecognized event.
+    public delegate void MoveRecognitionDispatcher(AbstractMove m);
+    // </ubi>
+    public class MainController
     {
         static KinectSensor _nui;
         static List<IWebSocketConnection> _sockets;
 
+        // <ubi>
+        private Prototype proto;
+        private MoveRecognition mr;
+        public event MoveRecognitionDispatcher MoveRecognized;
+        // </ubi>
+
         static bool _initialized = false;
 
-        static void Main(string[] args)
+        // <ubi>
+        public MainController()
         {
-            if (KinectSensor.KinectSensors.Count <= 0) return;
-
-            InitilizeKinect();
+            Console.Write("initializing sensor...");
+            InitializeKinect();
+            Console.WriteLine(_nui.IsRunning ? " done." : " error!");
+            Console.Write("initializing move recognition...");
+            InitializeMoveRecognizer();
+            Console.WriteLine(" done.");
+            Console.WriteLine("initializing sockets...");
             InitializeSockets();
+            
         }
+
+        private void InitializeMoveRecognizer()
+        {
+            
+
+            proto = new Prototype(false, false, false);
+            //proto.AddComponent<GestureRecognition>();
+            proto.AddComponent<MoveRecognition>();
+
+            // add move recognition
+            mr = proto.GetComponent<MoveRecognition>();
+            // register moves that should be recognized
+            // note: existing pause move disabled; to re-enable, add to moves-array
+            //String[] moves = { "BackToMenuMove", "NewMenuSelectionMove", "CircleControlMove", "QuitMenuMove" };
+            String[] moves = { "QuitMenuMove"};
+            mr.setRecognizableMoves(moves);
+
+            mr.MoveRecognized += new MoveRecognizedDelegate(mr_MoveRecognized);
+            mr.Log += new LogDelegate(mr_Log);
+
+            
+        }
+
+        // Will get called when registered moves are performed
+        void mr_MoveRecognized(AbstractMove m)
+        {
+            // delegating this to the MoveRecognitionDispatcher allows other components to register to this event
+            // and possibly react to it
+                if (MoveRecognized != null)
+                    MoveRecognized(m);
+
+            // however, we want to manage this by telling the websocket about the recognized move
+                Console.WriteLine(m.moveName);
+        }
+
+        void mr_Log(string message)
+        {
+            Console.WriteLine(message);
+        }
+        // </ubi>
 
         private static void InitializeSockets()
         {
@@ -52,7 +112,7 @@ namespace Kinect.Server
             Console.ReadLine();
         }
 
-        private static void InitilizeKinect()
+        private static void InitializeKinect()
         {
             _nui = KinectSensor.KinectSensors[0];
             _nui.DepthStream.Enable();
@@ -61,6 +121,8 @@ namespace Kinect.Server
             //_nui.Initialize(RuntimeOptions.UseDepthAndPlayerIndex | RuntimeOptions.UseSkeletalTracking);
             _nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(Nui_SkeletonFrameReady);
         }
+
+        
 
         static void Nui_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
@@ -95,5 +157,16 @@ namespace Kinect.Server
                 }
             }
         }
-    }
-}
+
+        static void Main(string[] args)
+        {
+            if (KinectSensor.KinectSensors.Count <= 0) return;
+
+            MainController mc = new MainController();
+            Console.WriteLine("MainController up and running.");
+        }
+    } // end of class MainController
+
+
+         
+} // end of using namespace

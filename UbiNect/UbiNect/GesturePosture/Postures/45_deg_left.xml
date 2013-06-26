@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<posture>
+  <name>45_deg_left</name>
+  <type>posture</type>
+  <constraints>
+    <angle>
+      <jointLegOne>HandLeft</jointLegOne>
+      <jointBase>ShoulderCenter</jointBase>
+      <jointLegTwo>HipCenter</jointLegTwo>
+      <minAngle>35</minAngle>
+      <maxAngle>55</maxAngle>
+    </angle>
+  </constraints>
+</posture>

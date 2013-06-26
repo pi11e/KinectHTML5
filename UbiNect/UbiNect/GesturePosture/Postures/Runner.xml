@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<posture>
+  <name>Runner</name>
+  <type>posture</type>
+  <constraints>
+    <angle>
+      <jointLegOne>HandLeft</jointLegOne>
+      <jointBase>KneeRight</jointBase>
+      <jointLegTwo>FootRight</jointLegTwo>
+      <minAngle>150</minAngle>
+      <maxAngle>180</maxAngle>
+    </angle>
+    <angle>
+      <jointLegOne>ElbowRight</jointLegOne>
+      <jointBase>HandRight</jointBase>
+      <jointLegTwo>FootLeft</jointLegTwo>
+      <minAngle>150</minAngle>
+      <maxAngle>180</maxAngle>
+    </angle>
+  </constraints>
+</posture>

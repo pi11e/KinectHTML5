@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kinect.Server", "Kinect.Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kinect.Client", "Kinect.Client\Kinect.Client.csproj", "{0F825F8E-0D13-453E-B97B-E91D4EED5AB3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UbiNect", "UbiNect\UbiNect\UbiNect.csproj", "{4B329417-A0CD-48B0-A807-69E72D073495}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,16 @@ Global
 		{0F825F8E-0D13-453E-B97B-E91D4EED5AB3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0F825F8E-0D13-453E-B97B-E91D4EED5AB3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0F825F8E-0D13-453E-B97B-E91D4EED5AB3}.Release|x86.ActiveCfg = Release|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4B329417-A0CD-48B0-A807-69E72D073495}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

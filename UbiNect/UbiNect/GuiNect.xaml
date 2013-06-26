@@ -1,0 +1,279 @@
+﻿<Window x:Class="UbiNect.GuiNect"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Height="805" Width="1000" Title="Prototyping Tool (alias GuiNect)" Loaded="Window_Loaded" MaxHeight="805">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="510*" />
+            <RowDefinition Height="256*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="335"/>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Grid-container for the different images -->
+        <Grid Grid.Column="0" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="255"/>
+                <RowDefinition Height="255"/>
+                <RowDefinition Height="255"/>
+            </Grid.RowDefinitions>
+            <!-- VGA canvas -->
+            <Border Grid.Row="0" Grid.Column="0" BorderThickness="2.5" BorderBrush="DarkGray" Margin="5">
+                <Canvas  Name="VGACanvas" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                        Width="320" Height="240" >
+                    <Image Name="VGA"  Width="320" Height="240" Canvas.Left="3" Canvas.Top="-7" />
+                </Canvas>
+            </Border>
+            <!-- depth canvas -->
+            <Border Name="DepthCanvasBorder" Grid.Row="1" Grid.Column="0" BorderThickness="2.5" BorderBrush="DarkGray" Margin="5">
+                <Canvas  Name="DepthCanvas" 
+                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                        MouseMove="DepthCanvas_MouseMove" MouseUp="DepthCanvas_MouseUp" 
+                        Width="320" Height="240" >
+                    <Image Name="Depth"  Width="320" Height="240"/>
+                </Canvas>
+            </Border>
+            <!-- skeleton canvas -->
+            <Border Grid.Row="2" Grid.Column="0" BorderThickness="2.5" BorderBrush="DarkGray" Margin="5">
+                <Canvas Grid.Row="2" Grid.Column="0" Name="SkeletonCanvas" 
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                    Width="320" Height="240"/>
+            </Border>
+        </Grid>
+
+        <!-- Log -->
+        <TextBox Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Name="txtLog" VerticalAlignment="Stretch" IsReadOnly="True" VerticalScrollBarVisibility="Visible" FontSize="22" />
+
+        <!-- TabControl  -->
+        <TabControl Name="tabControl" Grid.Column="1">
+            <!-- general information -->
+            <TabItem Header="General" Name="tabInfo">
+                <StackPanel Margin="10" >
+                    <Label Content="currently available components:"/>
+                    <ListBox Name="ComponentList" Margin="20, 5">
+                    </ListBox>
+                </StackPanel>
+            </TabItem>
+            <!-- tab surfaces -->
+            <TabItem Header="Surfaces" Name="tabSurfaces" Visibility="Collapsed" Padding="5" GotFocus="UpdateSurfaceViews" >
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid  Grid.Row="0" Grid.Column="0" Name="surfaceData" AutoGenerateColumns="False" ItemsSource="{Binding}" CanUserAddRows="False" SelectionChanged="surfaceData_SelectionChanged">
+
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ID}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Surface Type">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Type}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Visibility">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsThreeState="False" IsChecked="{Binding Visibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="UpdateSurfaceViews" Unchecked="UpdateSurfaceViews"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+
+                    <!-- Zweitafelprojektion -->
+                    <Grid Grid.Column="1" Grid.RowSpan="2" Margin="10,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition Height="5"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <!-- front view -->
+                        <StackPanel Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                            <Label Content="front view" HorizontalAlignment="Center"/>
+                            <Border BorderBrush="DarkGray" BorderThickness="2.5">
+                                <Canvas Name="cFrontView" Width="160" Height="120" Background="Transparent"/>
+                            </Border>
+                        </StackPanel>
+                        <!-- "Rissachse" -->
+                        <Rectangle Grid.Row="1" Height="1.5" Width="220" Fill="Black"/>
+
+                        <!-- top view -->
+                        <StackPanel Grid.Row="2" VerticalAlignment="Top" HorizontalAlignment="Center">
+                            <Border BorderBrush="DarkGray" BorderThickness="2.5">
+                                <Canvas Name="cTopView" Width="160" Height="120"  Background="Transparent"/>
+                            </Border>
+                            <Label Content="top view" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel HorizontalAlignment="Center" Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Label VerticalAlignment="Center" >Show:</Label>
+                            <CheckBox Name="handsCheck" VerticalAlignment="Center" Margin="10,0,0,0"></CheckBox>
+                            <Label VerticalAlignment="Center" >Hands</Label>
+                            <CheckBox Name="headCheck" VerticalAlignment="Center" Margin="10,0,0,0"></CheckBox>
+                            <Label VerticalAlignment="Center" >Head</Label>
+                            
+
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Steuerelemente Buttons -->
+                    <Grid Grid.Column="0" Grid.Row="2" Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="40"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                            <ComboBox VerticalContentAlignment="Center" Height="30" Grid.Row="0" Grid.Column="0" Margin="5">
+                                <ComboBoxItem Name="chkTriangle" IsSelected="True" >Triangle</ComboBoxItem>
+                                <ComboBoxItem Name="chkSphere">Sphere</ComboBoxItem>
+                            </ComboBox>
+                            
+                        <Button Grid.Row="0" Grid.Column="1" Content="Create New Surface"  HorizontalAlignment="Stretch" Margin="5" Name="btnNewSurface" VerticalAlignment="Stretch" Click="btnNewSurface_Click">
+                        </Button>
+                        <Button Content="Delete Selected Surface"  Grid.Row="1" Grid.Column="1" Margin="5" Name="btnDeleteSurface" VerticalAlignment="Stretch" Click="btnDeleteSurface_Click" />
+                        <Button Content="Export Surfaces" Grid.Row="2" Grid.Column="1" Margin="5" Name="btnExportSurface" VerticalAlignment="Stretch" Click="btnExportSurface_Click" />
+                        <Button Content="Import Surfaces" Grid.Row="3" Grid.Column="1" Margin="5" Name="btnImportSurface" VerticalAlignment="Stretch" Click="btnImportSurface_Click" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <!-- tab postures -->
+            <TabItem Header="Postures" Name="tabPostures" Visibility="Collapsed">
+                <Grid Grid.Column="0" Grid.Row="2" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="70"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid Name="PostureData" SelectionChanged="PostureData_SelectionChanged" ItemsSource="{Binding}" SelectionMode="Single" AutoGenerateColumns="False" CanUserAddRows="False" Grid.Row="0">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Posture Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding postureName}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom">
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Top"  >latest recognized gesture:</Label>
+                        <Label  HorizontalAlignment="Left" VerticalAlignment="Top" Name="regPosture" >none</Label>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1"  Grid.Row="0" Margin="10,0,10,0">
+                        <Label Name="selectedPosture"></Label>
+                        <TextBlock Name="selectedPostureDesc" Focusable="False" Padding="5" TextWrapping="Wrap" ></TextBlock>
+                        <Image Width="230" Name="selectedPostureImage"/>
+                    </StackPanel>
+
+                </Grid>
+            </TabItem>         
+
+            <TabItem Header="Create Postures" Name="tabPostureCreator" Visibility="Collapsed">
+                <Grid >
+                    <Canvas HorizontalAlignment="Left" Name="skeleton_canvas" Width="275" Background="#FFC8C8C8" Margin="12,12,0,0" Height="437" VerticalAlignment="Top"></Canvas>
+                    <TextBox Height="23" Margin="401,427,0,0" Name="nameOf" VerticalAlignment="Top" HorizontalAlignment="Left" Width="129" />
+                    <Label Content="Posture Name:" Height="23" HorizontalAlignment="Left" Margin="303,426,0,0" Name="label1" VerticalAlignment="Top" Width="92" />
+                    <Button Content="Create XML" Height="23" Margin="536,427,12,0" Name="bn_create_xml" VerticalAlignment="Top" Click="bn_create_xml_Click" />
+                    <TabControl Height="408" Margin="303,12,12,0" Name="tab_mode_control" VerticalAlignment="Top" SelectionChanged="tab_mode_control_SelectionChanged">
+                        <TabItem Header="1. Edit Skeleton" Name="tab_edit_skeleton">
+                            <Grid>
+                                <Button Content="Reset" Height="23" HorizontalAlignment="Left" Margin="6,347,0,0" Name="bn_reset_skeleton" VerticalAlignment="Top" Width="75" Click="btn_Reset_Click" />
+                                <TextBlock HorizontalAlignment="Left" Margin="6,6,0,236" Name="hint_text_edti" Text="" Width="295" TextWrapping="Wrap" />
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="2. Select Constraints" Name="tab_select_constraints">
+                            <Grid Width="309">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="16*" />
+                                    <RowDefinition Height="360*" />
+                                </Grid.RowDefinitions>
+                                <ListBox Height="132" HorizontalAlignment="Left" ItemsSource="{Binding}" Margin="6,222,0,0" Name="listbox_constraints" VerticalAlignment="Top" Width="292" Grid.Row="1" />
+                                <Button Content="Add Constraint" Height="23" HorizontalAlignment="Left" Margin="6,6,0,0" Name="bn_add_contraint" VerticalAlignment="Top" Width="115" Grid.RowSpan="2" Click="bn_add_constraint_Click" />
+                                <TextBlock Height="160" Margin="6,21,0,0" Name="hint_textBlock" Text="" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="292" Grid.Row="1" />
+                                <Button Content="Remove Constraint" Height="23" HorizontalAlignment="Left" Margin="127,6,0,0" Name="bn_remove_constraint" VerticalAlignment="Top" Width="118" Grid.RowSpan="2" Click="bn_remove_constraint_Click" />
+                                <Button Content="Info" Grid.RowSpan="2" Height="23" HorizontalAlignment="Left" Margin="260,6,0,0" Name="bn_info" VerticalAlignment="Top" Width="38" Click="bn_info_Click" />
+                                <TextBlock Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="274,194,0,0" Name="textblock_slider_tolerance" Text="10°" VerticalAlignment="Top" Width="31" />
+                                <Slider Grid.Row="1" Height="23" HorizontalAlignment="Left" Margin="74,193,0,0" Name="slider_tolerance" VerticalAlignment="Top" Width="185" Value="10" AutoToolTipPlacement="None" Maximum="180" TickFrequency="10" TickPlacement="BottomRight" LargeChange="10" IsSnapToTickEnabled="True" SmallChange="10" ValueChanged="slider_tolerance_ValueChanged" />
+                                <Label Content="Tolerance" Grid.Row="1" Height="30" HorizontalAlignment="Left" Margin="8,187,0,0" Name="label_tolerance" VerticalAlignment="Top" Width="67" />
+
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Gestures" Name="tabGestures" Visibility="Collapsed">
+                <Grid Grid.Column="0" Grid.Row="2" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="70"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid Name="GestureData" ItemsSource="{Binding}" SelectionMode="Single" AutoGenerateColumns="False"  CanUserAddRows="False" Grid.Row="0" Grid.Column="0" SelectionChanged="GestureData_SelectionChanged">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Gesture Name">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding gestureName}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom">
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Top"  >latest recognized gesture:</Label>
+                        <Label  HorizontalAlignment="Left" VerticalAlignment="Top" Name="regGesture" >none</Label>
+                    </StackPanel>
+
+                        <StackPanel Grid.Column="1"  Grid.Row="0" Margin="10,0,10,0">
+                            <Label Name="selectedGesture"></Label>
+                            <Label>Description:</Label>
+                            <TextBlock Name="selectedGestureDesc" Focusable="False" Padding="5" TextWrapping="Wrap" ></TextBlock>
+                        <Image Name="selectedGestureImage" Width="230" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+           
+            <TabItem Header="Recorder" Name="tabRecorder" Visibility="Collapsed">
+                <StackPanel Margin="10">
+                    <Button Content="Start Recording" Height="50" Margin="5" Click="StartRecord" />
+                    <Button Content="End Recording" Height="50" Margin="5" Click="EndRecord" />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+
+        <GridSplitter Grid.Column="1" Height="10" ResizeDirection="Rows" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Margin="0,0,0,256" Grid.Row="1" />
+
+
+
+    </Grid>
+</Window>

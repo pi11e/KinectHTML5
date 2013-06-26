@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<posture xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="posture.xsd">
+  <name>TPosture</name>
+  <type>posture</type>
+  <constraints>
+    <angle>
+      <jointLegOne>HandRight</jointLegOne>
+      <jointBase>ElbowRight</jointBase>
+      <jointLegTwo>ShoulderRight</jointLegTwo>
+      <minAngle>160</minAngle>
+      <maxAngle>180</maxAngle>
+    </angle>
+    <angle>
+      <jointLegOne>HandLeft</jointLegOne>
+      <jointBase>ElbowLeft</jointBase>
+      <jointLegTwo>ShoulderLeft</jointLegTwo>
+      <minAngle>160</minAngle>
+      <maxAngle>180</maxAngle>
+    </angle>
+    <angle>
+      <jointLegOne>ElbowRight</jointLegOne>
+      <jointBase>ShoulderCenter</jointBase>
+      <jointLegTwo>HipCenter</jointLegTwo>
+      <minAngle>70</minAngle>
+      <maxAngle>100</maxAngle>
+    </angle>
+    <angle>
+      <jointLegOne>ElbowLeft</jointLegOne>
+      <jointBase>ShoulderCenter</jointBase>
+      <jointLegTwo>HipCenter</jointLegTwo>
+      <minAngle>70</minAngle>
+      <maxAngle>100</maxAngle>
+    </angle>
+  </constraints>
+</posture>

@@ -1,0 +1,45 @@
+﻿<Window x:Class="_3D_Twister.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="3D-Twister" Height="550" Width="700" ResizeMode="CanResize" WindowState="Normal">
+    <Grid Name="Container" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SizeChanged="Grid_SizeChanged">
+        <Canvas Name="VGACanvas" Width="640" Height="480" HorizontalAlignment="Center" VerticalAlignment="Center" SizeChanged="Canvas_SizeChanged">
+            <Image Name="VGAImage" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Image.Width>
+                    <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor,
+                        AncestorType={x:Type Canvas}}"/>
+                </Image.Width>
+                <Image.Height>
+                    <Binding Path="ActualHeight" RelativeSource="{RelativeSource Mode=FindAncestor,
+                        AncestorType={x:Type Canvas}}"/>
+                </Image.Height>
+            </Image>
+            <Canvas Canvas.Left="0" Canvas.Top="0" Height="168" Width="402" Background="#64d0d0d0"/>
+            <Canvas Name="DynamicCanvas">
+                <Canvas.Width>
+                    <Binding Path="ActualWidth" RelativeSource="{RelativeSource Mode=FindAncestor,
+                        AncestorType={x:Type Canvas}}"/>
+                </Canvas.Width>
+                <Canvas.Height>
+                    <Binding Path="ActualHeight" RelativeSource="{RelativeSource Mode=FindAncestor,
+                        AncestorType={x:Type Canvas}}"/>
+                </Canvas.Height>
+            </Canvas>
+
+            <Label Canvas.Top="56" Canvas.Left="0" Content="Player 1:" Height="56" FontSize="28" />
+            <Label Canvas.Top="56" Canvas.Left="350" Content="0" Height="56" FontSize="28" Name="lblPlayer1Points"/>
+            <Label Canvas.Top="56" Canvas.Left="140" Content="not recognized" Height="56" FontSize="28" Name="lblPlayer1"/>
+            <Label Canvas.Top="112" Canvas.Left="0" Content="Player 2:" FontSize="28" Height="56"/>
+            <Label Canvas.Top="112" Canvas.Left="140" Content="not recognized" Height="56" FontSize="28" Name="lblPlayer2"/>
+            <Label Canvas.Top="112" Canvas.Left="350" Content="0" Height="56" FontSize="28" Name="lblPlayer2Points"/>
+
+            <Label Canvas.Top="0" Canvas.Left="0" Content="Player 1" Height="56" FontSize="28" Name="lblPlayer1Pos" Visibility="Hidden" Foreground="Green" Background="#64202020" />
+            <Image Width="100" Height="100" Name="imgPlayer1" Visibility="Hidden"/>
+            <Label Canvas.Top="0" Canvas.Left="0" Content="Player 2" Height="56" FontSize="28" Name="lblPlayer2Pos" Visibility="Hidden" Foreground="Blue" Background="#64202020" />
+            <Image Width="100" Height="100" Name="imgPlayer2" Visibility="Hidden"/>
+
+            <Label Canvas.Top="0" Canvas.Left="120" Content="60.00" Height="56" FontSize="28" Name="lblTimeLeft"/>
+            <Button Canvas.Left="0" Canvas.Top="0" Content="Start Game" Height="56" Name="btnStart" Width="110" Click="btnStart_Click" />
+        </Canvas>
+    </Grid>
+</Window>
