@@ -75,7 +75,8 @@ namespace Kinect.Server
 
         void gr_GestureRecognized(Gesture g)
         {
-            Console.WriteLine(g.gestureName);
+            //Console.WriteLine(g.gestureName);
+            this.sendMessage("gesture " + g.gestureName + " was recognized!");
         }
 
         // Will get called when registered moves are performed
@@ -103,7 +104,7 @@ namespace Kinect.Server
 
             Console.WriteLine(message);
             // send message via sockets
-            this.sendMessage(message);
+            //this.sendMessage(message);
         }
 
         private void sendMessage(string message)
