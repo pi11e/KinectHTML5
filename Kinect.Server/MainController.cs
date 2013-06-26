@@ -23,6 +23,7 @@ namespace Kinect.Server
         // <ubi>
         private Prototype proto;
         private MoveRecognition mr;
+        private GestureRecognition gr;
         public event MoveRecognitionDispatcher MoveRecognized;
         // </ubi>
 
@@ -54,14 +55,27 @@ namespace Kinect.Server
             mr = proto.GetComponent<MoveRecognition>();
             // register moves that should be recognized
             // note: existing pause move disabled; to re-enable, add to moves-array
-            //String[] moves = { "BackToMenuMove", "NewMenuSelectionMove", "CircleControlMove", "QuitMenuMove" };
-            String[] moves = { "QuitMenuMove"};
+            //String[] moves = { "BackToMenuMove", "NewMenuSelectionMove", "CircleControlMove", "BookShelfConfirm" };
+            String[] moves = { "BookShelfConfirm"};
             mr.setRecognizableMoves(moves);
 
             mr.MoveRecognized += new MoveRecognizedDelegate(mr_MoveRecognized);
             mr.Log += new LogDelegate(mr_Log);
 
-            
+
+            // add gesture recognition
+            proto.AddComponent<GestureRecognition>();
+
+            gr = proto.GetComponent<GestureRecognition>();
+            String[] gestures = { "LeftHandSwipeRightGesture" };
+            gr.setRecognizableGestures(gestures, false);
+            gr.GestureRecognized += new GestureRecognizedDelegate(gr_GestureRecognized);
+            gr.Log += new LogDelegate(mr_Log);
+        }
+
+        void gr_GestureRecognized(Gesture g)
+        {
+            Console.WriteLine(g.gestureName);
         }
 
         // Will get called when registered moves are performed
@@ -69,17 +83,39 @@ namespace Kinect.Server
         {
             // delegating this to the MoveRecognitionDispatcher allows other components to register to this event
             // and possibly react to it
-                if (MoveRecognized != null)
-                    MoveRecognized(m);
+            if (MoveRecognized != null)
+            {
+                // raise the MoveRecognized event
+                MoveRecognized(m);
+            }
 
-            // however, we want to manage this by telling the websocket about the recognized move
-                Console.WriteLine(m.moveName);
+            
+            // output move name to server console for debugging
+            Console.WriteLine(m.moveName);
+
+            // however, we also want to handle MoveRecognition by telling the websocket 
+            this.sendMessage("move " + m.moveName + " was recognized!");
         }
 
         void mr_Log(string message)
         {
+            
+
             Console.WriteLine(message);
+            // send message via sockets
+            this.sendMessage(message);
         }
+
+        private void sendMessage(string message)
+        {
+            
+            foreach (var socket in _sockets)
+            {
+
+                socket.Send(Server.SkeletonSerializer.toJSON(message));
+            }
+        }
+
         // </ubi>
 
         private static void InitializeSockets()
@@ -163,7 +199,7 @@ namespace Kinect.Server
             if (KinectSensor.KinectSensors.Count <= 0) return;
 
             MainController mc = new MainController();
-            Console.WriteLine("MainController up and running.");
+            
         }
     } // end of class MainController
 

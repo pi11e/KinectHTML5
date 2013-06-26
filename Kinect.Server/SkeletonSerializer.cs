@@ -19,6 +19,19 @@ namespace Kinect.Server
         {
             [DataMember(Name = "skeletons")]
             public List<JSONSkeleton> Skeletons { get; set; }
+
+            [DataMember(Name = "type")]
+            public string type { get; set; }
+        }
+
+        [DataContract]
+        class JSONString
+        {
+            [DataMember(Name = "message")]
+            public string message { get; set; }
+
+            [DataMember(Name = "type")]
+            public string type { get; set; }
         }
 
         [DataContract]
@@ -73,9 +86,22 @@ namespace Kinect.Server
                 }
 
                 jsonSkeletons.Skeletons.Add(jsonSkeleton);
+                jsonSkeletons.type = "JSONSkeletonCollection";
             }
 
             return Serialize(jsonSkeletons);
+        }
+
+        public static string toJSON(object obj)
+        {
+            if(obj is string)
+            {
+                JSONString jstring = new JSONString();
+                jstring.type = "JSONstring";
+                jstring.message = (string)obj;
+            }
+
+            return Serialize(obj);
         }
 
         // Resource: http://pietschsoft.com/post/2008/02/NET-35-JSON-Serialization-using-the-DataContractJsonSerializer.aspx.
