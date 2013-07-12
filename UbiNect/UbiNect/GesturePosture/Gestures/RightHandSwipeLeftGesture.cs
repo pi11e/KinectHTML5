@@ -16,7 +16,7 @@ namespace UbiNect.GesturePosture
         /// holder for the startPosture of the hand
         /// </summary>
         private SkeletonPoint starthandPosture;
-        
+
         /// <summary>
         /// holder for the last saved position
         /// </summary>
@@ -33,7 +33,8 @@ namespace UbiNect.GesturePosture
         /// <param name="name">name of gesture</param>
         /// <param name="minimalLength">minimal Length of the gesture move</param>
         /// <param name="gestureDuration">maximal duration of the gesture</param>
-         public RightHandSwipeLeftGesture(String name): base(name)
+        public RightHandSwipeLeftGesture(String name)
+            : base(name)
         {
             starthandPosture = new SkeletonPoint();
             oldPosition = new SkeletonPoint();
@@ -42,7 +43,7 @@ namespace UbiNect.GesturePosture
             gestureDuration = 1000;
             observationDistance = 0.03;
             descriptionImage = Properties.Resources.RightHandSwipeLeft;
-            description = "For correct execution: 1. stay in front of the kinect 2. let your left arm hang loose  3. keep your right hand about 40 centimeters (in x direction) to the right away from your body  4. swipe your right hand constant to the left";
+            description = "For correct execution: 1. stand in front of the kinect 2. let your left arm hang loose  3. keep your right hand about 30 centimeters (in x direction) to the right away from your body  4. swipe your right hand in a fluid motion to the left";
         }
         /// <summary>
         /// Override isStartPostureMethod form Gesture.class
@@ -53,12 +54,14 @@ namespace UbiNect.GesturePosture
         /// <returns>true, if startPosture is recognized</returns>
         public override bool isStartPosture(Dictionary<JointType, Joint> dict)
         {
-            //distance between right hand and hip right
-            double HDTB = dict[JointType.HandRight].Position.X-dict[JointType.HipRight].Position.X;
-            //distance between left hand and vector hip-shoulder
-            double lhhs = dict[JointType.HipLeft].Position.X-dict[JointType.HandLeft].Position.X;
+            double distanceThresholdForStartPosture = 0.3;
 
-            if (dict[JointType.HandRight].Position.X > 0 && HDTB >= 0.4 && lhhs <= 0.3)
+            //distance between right hand and hip right
+            double rightHandToRightHipDistance = dict[JointType.HandRight].Position.X - dict[JointType.HipRight].Position.X;
+            //distance between left hand and vector hip-shoulder
+            double leftHandToLeftHipDistance = dict[JointType.HipLeft].Position.X - dict[JointType.HandLeft].Position.X;
+
+            if (dict[JointType.HandRight].Position.X > 0 && rightHandToRightHipDistance >= distanceThresholdForStartPosture && leftHandToLeftHipDistance <= 0.3)
             {
                 starthandPosture = dict[JointType.HandRight].Position;
                 oldPosition = starthandPosture;
@@ -92,7 +95,7 @@ namespace UbiNect.GesturePosture
         /// <returns>true, if minimal distance is overrun</returns>
         public override bool saveObservation(Dictionary<JointType, Joint> dict)
         {
-            double Xdistance = oldPosition.X-dict[JointType.HandRight].Position.X;
+            double Xdistance = oldPosition.X - dict[JointType.HandRight].Position.X;
 
             if (Xdistance >= observationDistance)
             {
@@ -109,7 +112,7 @@ namespace UbiNect.GesturePosture
         /// <returns>actual length of the move</returns>
         public override double getActualMoveLength()
         {
-             return actuallength;
+            return actuallength;
         }
 
         /// <summary>
@@ -120,7 +123,7 @@ namespace UbiNect.GesturePosture
         public override bool isGesture(List<Dictionary<JointType, Joint>> pos)
         {
             // the observed movement's y-coordinates must not exceed more than +/- the value in yTolerance
-            double yTolerance = 0.1;
+            double yTolerance = 0.2;
 
             if (pos.Count > 3)
             {
@@ -134,7 +137,7 @@ namespace UbiNect.GesturePosture
                         continue;
                     else
                     {
-                         return false;
+                        return false;
                     }
                 }
                 return true;
