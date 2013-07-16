@@ -40,7 +40,7 @@ namespace UbiNect.GesturePosture
             actuallength = 0.0;
             minimalLength = 0.3;
             gestureDuration = 1000;
-            observationDistance = 0.03;
+            observationDistance = 0.02;
             descriptionImage = Properties.Resources.LeftHandSwipeRight;
             description = "For correct execution: 1. stay in front of the kinect 2. let your right arm hang loose  3. keep your left hand about 30 centimeters (in x direction) to the left away from your body  4. swipe your left hand in a fluid motion to the right";
         }
@@ -57,13 +57,18 @@ namespace UbiNect.GesturePosture
             // minimum distance between left hand and left hip joint required to register starting posture
             double distanceThresholdForStartPosture = 0.3;
 
+            // note: positive x-axis extends to the left of the sensor; meaning x value along the axis extending to the left of the player DEcreases
+            bool leftHandToLeftOfHip = dict[JointType.HandLeft].Position.X < dict[JointType.HipLeft].Position.X;
+
             //distance between left hand and hip left (in x plane)
-            double leftHandToLeftHipDistance = dict[JointType.HipLeft].Position.X-dict[JointType.HandLeft].Position.X;
+            double leftHandToLeftHipDistance = Math.Abs(dict[JointType.HipLeft].Position.X-dict[JointType.HandLeft].Position.X);
             //distance between right hand and right hip
             double rightHandToRightHipDistance = dict[JointType.HandRight].Position.X-dict[JointType.HipRight].Position.X;
 
             if (dict[JointType.HandLeft].Position.X < 0 && leftHandToLeftHipDistance >= distanceThresholdForStartPosture && rightHandToRightHipDistance <= 0.3)
             {
+                Console.WriteLine("LeftHandSwipeRightGesture left hand x position: " + dict[JointType.HandLeft].Position.X);
+
                 starthandPosture = dict[JointType.HandLeft].Position;
                 oldPosition = starthandPosture;
                 actuallength = 0;
