@@ -8,11 +8,11 @@ using System.Diagnostics;
 namespace UbiNect.GesturePosture
 {
     /// <summary>
-    /// Represents the "Move left hand from left to right side" Gesture class
+    /// Represents the "Move right hand from right to left side" Gesture class
     /// </summary>
-    class LeftHandSwipeRightGesture : Gesture
+    class RightHandPushUpGesture : Gesture
     {
-       /// <summary>
+        /// <summary>
         /// holder for the startPosture of the hand
         /// </summary>
         private SkeletonPoint starthandPosture;
@@ -28,12 +28,12 @@ namespace UbiNect.GesturePosture
         private double actuallength;
 
         /// <summary>
-        /// Constructs a new Gesture instance LeftHandSwipeRightGesture.
+        /// Constructs a new Gesture instance MoveHandRightToLeft.
         /// </summary>
         /// <param name="name">name of gesture</param>
         /// <param name="minimalLength">minimal Length of the gesture move</param>
         /// <param name="gestureDuration">maximal duration of the gesture</param>
-        public LeftHandSwipeRightGesture(String name) : base(name)
+         public RightHandPushUpGesture(String name): base(name)
         {
             starthandPosture = new SkeletonPoint();
             oldPosition = new SkeletonPoint();
@@ -41,30 +41,40 @@ namespace UbiNect.GesturePosture
             minimalLength = 0.3;
             gestureDuration = 1000;
             observationDistance = 0.03;
-            descriptionImage = Properties.Resources.LeftHandSwipeRight;
-            description = "For correct execution: 1. stay in front of the kinect 2. let your right arm hang loose  3. keep your left hand about 30 centimeters (in x direction) to the left away from your body  4. swipe your left hand in a fluid motion to the right";
+            descriptionImage = Properties.Resources.RightHandSwipeLeft;
+            description = "";
         }
-
         /// <summary>
         /// Override isStartPostureMethod form Gesture.class
         /// Checks if Posture is Startposture of Gesture  
-        /// (left hand 40 centimeter away from hip,x coordinate under 0 and right hand distance to hip smaller than 25 centimeter)
         /// </summary>
         /// <param name="dict">a map of Joints and actual joint data</param>
         /// <returns>true, if startPosture is recognized</returns>
         public override bool isStartPosture(Dictionary<JointType, Joint> dict)
         {
-            // minimum distance between left hand and left hip joint required to register starting posture
-            double distanceThresholdForStartPosture = 0.3;
+            // for the push up gesture, the right hand should be
+            // - not too far off to the left or right (same x plane basically as the shoulder itself, with some tolerance margin)
+            // - below shoulder height
+            // - actually pretty far below shoulder height
+            
+            //distance between right hand and right shoulder
+            double rightHandToRightShoulderDistanceX = Math.Abs(dict[JointType.HandRight].Position.X-dict[JointType.ShoulderRight].Position.X);
+            double rightHandToRightShoulderDistanceY = Math.Abs(dict[JointType.HandRight].Position.Y - dict[JointType.ShoulderRight].Position.Y);
+            double rightHandToShoulderDistanceZ = Math.Abs(dict[JointType.HandRight].Position.Z - dict[JointType.ShoulderCenter].Position.Z);
 
-            //distance between left hand and hip left (in x plane)
-            double leftHandToLeftHipDistance = dict[JointType.HipLeft].Position.X-dict[JointType.HandLeft].Position.X;
-            //distance between right hand and right hip
-            double rightHandToRightHipDistance = dict[JointType.HandRight].Position.X-dict[JointType.HipRight].Position.X;
+            // all of these are in terms of right hand
+            bool stretchedOutFromShoulder = rightHandToShoulderDistanceZ > 0.2;
+            bool inXPlaneOfShoulder = rightHandToRightShoulderDistanceX < 0.15;
+            bool belowShoulder = dict[JointType.HandRight].Position.Y < dict[JointType.ShoulderCenter].Position.Y;
+            bool farBelowShoulder = rightHandToRightShoulderDistanceY > 0.3;
 
-            if (dict[JointType.HandLeft].Position.X < 0 && leftHandToLeftHipDistance >= distanceThresholdForStartPosture && rightHandToRightHipDistance <= 0.3)
+
+            // former if-clause from right hand swipe left gesture for comparison
+            //if (dict[JointType.HandRight].Position.X > 0 && rightHandToRightHipDistance >= distanceThresholdForStartPosture && leftHandToLeftHipDistance <= 0.3)
+
+            if (stretchedOutFromShoulder && inXPlaneOfShoulder && belowShoulder && farBelowShoulder)
             {
-                starthandPosture = dict[JointType.HandLeft].Position;
+                starthandPosture = dict[JointType.HandRight].Position;
                 oldPosition = starthandPosture;
                 actuallength = 0;
                 return true;
@@ -74,16 +84,17 @@ namespace UbiNect.GesturePosture
 
         /// <summary>
         /// Override startRecognition-Method form Gesture.class
-        /// Checks if distance between startPosture and actual Posture is exceeded to start Recognition 
+        /// Checks if distance between startPosture and actual Posture is overrun to start Recognition 
         /// (threshold is 5 centimeter)
         /// </summary>
         /// <param name="dict">a map of Joints and actual joint data</param>
-        /// <returns>true, if minimal Distance is exceeded</returns>
+        /// <returns>true, if minimal Distance is overrun</returns>
         public override bool startRecognition(Dictionary<JointType, Joint> dict)
         {
             double threshold = 0.05;
-            // starthandPosture.X is the left hand position from starting posture
-            if (dict[JointType.HandLeft].Position.X > starthandPosture.X + threshold)
+
+            // this gesture describes an upward motion in front of the right shoulder, so we check if the y value increases
+            if (dict[JointType.HandRight].Position.Y > starthandPosture.Y - threshold)
             {
                 return true;
             }
@@ -94,15 +105,15 @@ namespace UbiNect.GesturePosture
         /// Check if distance between given Skeleton and oldPosition is greater than observationDistance
         /// </summary>
         /// <param name="dict">a map of Joints and actual joint data</param>
-        /// <returns>true, if minimal distance is exceeded</returns>
+        /// <returns>true, if minimal distance is overrun</returns>
         public override bool saveObservation(Dictionary<JointType, Joint> dict)
         {
-            double Xdistance = dict[JointType.HandLeft].Position.X - oldPosition.X;
-            
-            if (Xdistance >= observationDistance)
+            double Ydistance = oldPosition.Y-dict[JointType.HandRight].Position.Y;
+
+            if (Ydistance >= observationDistance)
             {
-                this.oldPosition = dict[JointType.HandLeft].Position;
-                actuallength += Xdistance;
+                this.oldPosition = dict[JointType.HandRight].Position;
+                actuallength += Ydistance;
                 return true;
             }
             return false;
@@ -124,18 +135,19 @@ namespace UbiNect.GesturePosture
         /// <returns>true, if Gesture is identified</returns>
         public override bool isGesture(List<Dictionary<JointType, Joint>> pos)
         {
-            // the observed movement's y-coordinates must not exceed more than +/- the value in yTolerance
-            double yTolerance = 0.2;
+            // the observed movement's x-coordinates must not exceed more than +/- the value in xTolerance
+            double xTolerance = 0.15;
 
+            // if a sufficient number of values has been recorded
             if (pos.Count > 3)
             {
-                double upperthreshold = starthandPosture.Y + yTolerance;
-                double lowerthreshold = starthandPosture.Y - yTolerance;
+                double upperthreshold = starthandPosture.X + xTolerance;
+                double lowerthreshold = starthandPosture.X - xTolerance;
 
                 for (int i = 0; i < pos.Count; i++)
                 {
-                    double y = pos[i][JointType.HandLeft].Position.Y;
-                    if (y < upperthreshold && y > lowerthreshold)
+                    double x = pos[i][JointType.HandRight].Position.X;
+                    if (x < upperthreshold && x > lowerthreshold) // x value remains within the bounds of the x tolerance threshold
                         continue;
                     else
                     {
@@ -146,5 +158,6 @@ namespace UbiNect.GesturePosture
             }
             return false;
         }
+
     }
 }

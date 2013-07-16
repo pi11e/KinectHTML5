@@ -47,6 +47,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GesturePosture\Gestures\RightHandPushUpGesture.cs" />
+    <Compile Include="GesturePosture\Gestures\LeftHandSwipeLeftGesture.cs" />
     <Compile Include="GesturePosture\Gestures\RightHandPullDownGesture.cs" />
     <Compile Include="Move\AbstractMove.cs" />
     <Compile Include="Button\AbstractElement.cs" />

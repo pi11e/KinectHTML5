@@ -178,11 +178,18 @@ namespace UbiNect.GesturePosture
                         }
                         else
                         {
-                            //...if given Skeleton is start posture not registred jet and no gesture is recording
+                            //...if given Skeleton is start posture not registred yet and no gesture is recording
                             if (g.isStartPosture(dict) && g!=currentGesture && !isGestureRecording)
                             {
-                                Log("start posture of Player " + s.Key + " for gesture: " + g.gestureName + " recognized");
+                                if (currentGesture == null)
+                                {
+                                    currentGesture = g;
+                                } // otherwise, currentGesture is set to a previously registered (as in start posture recognized) gesture
+
+                                Log("start posture of Player " + s.Key + " for gesture: " + g.gestureName + " recognized. Previously registered "+ currentGesture.gestureName + " is recording: " + currentGesture.startRecognition(dict) + ", positions recorded = " + positions.Count);
                                 //only current gesture which start posture is recognized is saved
+
+                                // maybe this should be changed: it will override the previous gesture even if it is already recording. this should check if a previously registered gesture could be recording.
                                 currentGesture = g;
                                 positions.Clear();
                             }

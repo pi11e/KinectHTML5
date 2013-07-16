@@ -10,7 +10,7 @@ namespace UbiNect.GesturePosture
     /// <summary>
     /// Represents the "Move left hand from left to right side" Gesture class
     /// </summary>
-    class LeftHandSwipeRightGesture : Gesture
+    class LeftHandSwipeLeftGesture : Gesture
     {
        /// <summary>
         /// holder for the startPosture of the hand
@@ -28,12 +28,12 @@ namespace UbiNect.GesturePosture
         private double actuallength;
 
         /// <summary>
-        /// Constructs a new Gesture instance LeftHandSwipeRightGesture.
+        /// Constructs a new Gesture instance LeftHandSwipeLeftGesture.
         /// </summary>
         /// <param name="name">name of gesture</param>
         /// <param name="minimalLength">minimal Length of the gesture move</param>
         /// <param name="gestureDuration">maximal duration of the gesture</param>
-        public LeftHandSwipeRightGesture(String name) : base(name)
+        public LeftHandSwipeLeftGesture(String name) : base(name)
         {
             starthandPosture = new SkeletonPoint();
             oldPosition = new SkeletonPoint();
@@ -48,21 +48,22 @@ namespace UbiNect.GesturePosture
         /// <summary>
         /// Override isStartPostureMethod form Gesture.class
         /// Checks if Posture is Startposture of Gesture  
-        /// (left hand 40 centimeter away from hip,x coordinate under 0 and right hand distance to hip smaller than 25 centimeter)
         /// </summary>
         /// <param name="dict">a map of Joints and actual joint data</param>
         /// <returns>true, if startPosture is recognized</returns>
         public override bool isStartPosture(Dictionary<JointType, Joint> dict)
         {
-            // minimum distance between left hand and left hip joint required to register starting posture
-            double distanceThresholdForStartPosture = 0.3;
+            // for the tracking to start, a user must first assume this starting posture
+            // - in this case, the left hand should at least be held above hip y-axis level
+            // - it also should be held close to the body's center (closer to the x=0 position than the left hip)
 
-            //distance between left hand and hip left (in x plane)
-            double leftHandToLeftHipDistance = dict[JointType.HipLeft].Position.X-dict[JointType.HandLeft].Position.X;
+
+            bool leftHandInBodyCenter = dict[JointType.HandLeft].Position.X < dict[JointType.HipLeft].Position.X;
+
             //distance between right hand and right hip
             double rightHandToRightHipDistance = dict[JointType.HandRight].Position.X-dict[JointType.HipRight].Position.X;
 
-            if (dict[JointType.HandLeft].Position.X < 0 && leftHandToLeftHipDistance >= distanceThresholdForStartPosture && rightHandToRightHipDistance <= 0.3)
+            if (leftHandInBodyCenter && dict[JointType.HandLeft].Position.Y >= dict[JointType.HipLeft].Position.Y && rightHandToRightHipDistance <= 0.3)
             {
                 starthandPosture = dict[JointType.HandLeft].Position;
                 oldPosition = starthandPosture;
@@ -83,7 +84,9 @@ namespace UbiNect.GesturePosture
         {
             double threshold = 0.05;
             // starthandPosture.X is the left hand position from starting posture
-            if (dict[JointType.HandLeft].Position.X > starthandPosture.X + threshold)
+
+            // start recognition if x values decrease (indicating a movement away from the body center)
+            if (dict[JointType.HandLeft].Position.X < starthandPosture.X + threshold)
             {
                 return true;
             }
