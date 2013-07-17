@@ -221,6 +221,42 @@ namespace Kinect.Server
             StringBuilder dump = new StringBuilder();
             this.buildAndSendStringDump(dump);
 
+            foreach (var userInfo in _userInfos)
+            {
+                var userID = userInfo.SkeletonTrackingId;
+                if (userID == 0)
+                    continue;
+
+                var hands = userInfo.HandPointers;
+                if (hands.Count == 0)
+                    dump.AppendLine("    No hands");
+                else
+                {
+                    foreach (var hand in hands)
+                    {
+                        if (hand.IsActive)
+                        {
+                            
+                        }
+
+
+                        var lastHandEvents = hand.HandType == InteractionHandType.Left
+                                                 ? _lastLeftHandEvents
+                                                 : _lastRightHandEvents;
+
+                        if (hand.HandEventType != InteractionHandEventType.None)
+                            lastHandEvents[userID] = hand.HandEventType;
+
+                        var lastHandEvent = lastHandEvents.ContainsKey(userID)
+                                                ? lastHandEvents[userID]
+                                                : InteractionHandEventType.None;
+
+                        
+                    }
+                }
+
+
+            }
             
         }
 
@@ -318,7 +354,7 @@ namespace Kinect.Server
 
             
         }
-
+        
         static void Main(string[] args)
         {
             if (KinectSensor.KinectSensors.Count <= 0) return;
