@@ -71,7 +71,7 @@ namespace Kinect.Server
             proto.AddComponent<GestureRecognition>();
 
             gr = proto.GetComponent<GestureRecognition>();
-            String[] gestures = { "LeftHandSwipeRightGesture", "LeftHandSwipeLeftGesture", "RightHandPullDownGesture", "RightHandPushUpGesture" };
+            String[] gestures = { "LeftHandSwipeRightGesture", "RightHandSwipeRight", "RightHandPullDownGesture", "RightHandPushUpGesture" };
             gr.setRecognizableGestures(gestures, false);
             gr.GestureRecognized += new GestureRecognizedDelegate(gr_GestureRecognized);
             gr.Log += new LogDelegate(mr_Log);
@@ -212,13 +212,14 @@ namespace Kinect.Server
             }
         }
 
+        /*
         static void Main(string[] args)
         {
             if (KinectSensor.KinectSensors.Count <= 0) return;
 
             MainController mc = new MainController();
             
-        }
+        }*/
     } // end of class MainController
 
 
