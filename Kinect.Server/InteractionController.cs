@@ -41,7 +41,7 @@ namespace Kinect.Server
 
         private void InitializeKinect()
         {
-
+            bool useNearMode = false;
         
            // this is just a test, so it only works with one Kinect, and quits if that is not available.
            _sensor = KinectSensor.KinectSensors.FirstOrDefault();
@@ -55,13 +55,14 @@ namespace Kinect.Server
            _userInfos = new UserInfo[InteractionFrame.UserInfoArrayLength];
         
         
-           _sensor.DepthStream.Range = DepthRange.Default;
+
+           _sensor.DepthStream.Range = useNearMode ? DepthRange.Near : DepthRange.Default;
            _sensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
         
             // for seated mode / near range interaction, enable these:
-           //_sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-           //_sensor.SkeletonStream.EnableTrackingInNearRange = true;
-           _sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
+            
+           _sensor.SkeletonStream.TrackingMode = useNearMode ? SkeletonTrackingMode.Seated : SkeletonTrackingMode.Default;
+           _sensor.SkeletonStream.EnableTrackingInNearRange = useNearMode;
            _sensor.SkeletonStream.Enable();
         
            _interactionStream = new InteractionStream(_sensor, new DummyInteractionClient());
@@ -79,6 +80,7 @@ namespace Kinect.Server
 
         private bool InitializeInteractionRecognizer()
         {
+            
             return true;
         }
 
