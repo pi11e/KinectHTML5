@@ -6,6 +6,7 @@ using Fleck;
 using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit.Interaction;
 
+
 namespace Kinect.Server
 {
    
@@ -283,6 +284,7 @@ namespace Kinect.Server
                 {
                     foreach (var hand in hands)
                     {
+                        
                         var lastHandEvents = hand.HandType == InteractionHandType.Left
                                                  ? _lastLeftHandEvents
                                                  : _lastRightHandEvents;
@@ -293,6 +295,21 @@ namespace Kinect.Server
                         var lastHandEvent = lastHandEvents.ContainsKey(userID)
                                                 ? lastHandEvents[userID]
                                                 : InteractionHandEventType.None;
+                            
+                        // send a string that says "handconfig:[left|right]:$isActive:$isGripped"
+                        var side = hand.HandType == InteractionHandType.Left ? "left:" : "right:";
+                        var isActive = hand.IsActive.ToString() + ":";
+                        var isGripped = lastHandEvent.ToString() + ":";
+
+                        var message = "handconfig:" + side + isActive + isGripped;
+                        if (hasUser)
+                        {
+                            this.sendMessage(message);
+                        }
+
+                        
+
+                        
 
                         dump.AppendLine();
                         dump.AppendLine("    HandType: " + hand.HandType);
@@ -349,8 +366,15 @@ namespace Kinect.Server
                 // broadcast message
                 foreach (var socket in _sockets)
                 {
-
-                    socket.Send(Server.SkeletonSerializer.toJSON(message));
+                    // throws IOException if connection was broken on client side
+                    try
+                    {
+                        socket.Send(Server.SkeletonSerializer.toJSON(message));
+                    }
+                    catch (System.IO.IOException ioe)
+                    {
+                        Console.WriteLine("ERROR: Sending message " + message + " could not be completed, socket was terminated.");
+                    }
                 }
             }
 
