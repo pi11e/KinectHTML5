@@ -16,7 +16,7 @@ namespace Kinect.Server
     public delegate void MoveRecognitionDispatcher(AbstractMove m);
     public delegate void GestureRecognitionDispatcher(Gesture g);
     // </ubi>
-    public class MainController
+    public class UbiNectController
     {
         static KinectSensor _nui;
         static List<IWebSocketConnection> _sockets;
@@ -33,7 +33,7 @@ namespace Kinect.Server
         static bool _initialized = false;
 
         // <ubi>
-        public MainController()
+        public UbiNectController()
         {
             Console.Write("initializing sensor...");
             InitializeKinect();
@@ -212,7 +212,7 @@ namespace Kinect.Server
             }
         }
 
-        /*
+        /* deactivated
         static void Main(string[] args)
         {
             if (KinectSensor.KinectSensors.Count <= 0) return;

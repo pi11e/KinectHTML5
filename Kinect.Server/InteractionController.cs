@@ -30,11 +30,8 @@ namespace Kinect.Server
         {
             Console.Write("initializing sensor...");
             InitializeKinect();
-            Console.WriteLine(_sensor.IsRunning ? " done." : " error!");
-            Console.Write("initializing kinect interactions...");
-
+            Console.WriteLine(_initialized ? " done." : " error!");
             
-
             Console.WriteLine("initializing sockets...");
             InitializeSockets();
             
@@ -92,6 +89,7 @@ namespace Kinect.Server
             _sockets = new List<IWebSocketConnection>();
 
             var server = new WebSocketServer("ws://localhost:8181");
+            
 
             server.Start(socket =>
             {
@@ -138,6 +136,8 @@ namespace Kinect.Server
             });
 
             _initialized = true;
+            Console.WriteLine(" done.");
+            Console.WriteLine("");
 
             Console.ReadLine();
         }

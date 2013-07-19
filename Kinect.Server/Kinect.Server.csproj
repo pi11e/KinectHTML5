@@ -65,7 +65,7 @@
     <Compile Include="InteractionController.cs" />
     <Compile Include="KinectHelper.cs" />
     <Compile Include="ObjectCopier.cs" />
-    <Compile Include="MainController.cs" />
+    <Compile Include="UbiNectController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SkeletonSerializer.cs" />
   </ItemGroup>
