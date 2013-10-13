@@ -371,7 +371,7 @@ namespace Kinect.Server
                     {
                         socket.Send(Server.SkeletonSerializer.toJSON(message));
                     }
-                    catch (System.IO.IOException ioe)
+                    catch (System.IO.IOException)
                     {
                         Console.WriteLine("ERROR: Sending message " + message + " could not be completed, socket was terminated.");
                     }

@@ -65,7 +65,7 @@
     <Compile Include="InteractionController.cs" />
     <Compile Include="KinectHelper.cs" />
     <Compile Include="ObjectCopier.cs" />
-    <Compile Include="UbiNectController.cs" />
+    <Content Include="UbiNectController.txt" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SkeletonSerializer.cs" />
   </ItemGroup>
@@ -77,12 +77,6 @@
     <Content Include="KinectInteraction170_64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UbiNect\UbiNect\UbiNect.csproj">
-      <Project>{4B329417-A0CD-48B0-A807-69E72D073495}</Project>
-      <Name>UbiNect</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
