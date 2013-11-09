@@ -355,7 +355,7 @@ namespace Kinect.Server
             else
             {
                 // users detected
-                this.sendMessage(dump.ToString());
+                //this.sendMessage(dump.ToString());
             }
         }
 
